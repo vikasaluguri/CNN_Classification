@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cat vs Dog Classifier</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 40px;
+            width: 420px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+        }
+
+        h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 20px;
+            background: #6a5acd;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+
+        .upload-btn:hover {
+            background: #5a4ccf;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 12px 30px;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #43a047;
+        }
+
+        img {
+            margin-top: 20px;
+            width: 220px;
+            border-radius: 10px;
+        }
+
+        #result {
+            margin-top: 15px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🐶 Cat vs Dog Classifier 🐱</h2>
+
+    <label class="upload-btn">
+        Choose Image
+        <input type="file" id="imageInput">
+    </label>
+
+    <br>
+
+    <button onclick="predict()">Predict</button>
+
+    <br>
+    <img id="preview">
+    <div id="result"></div>
+</div>
+
+<script>
+function predict() {
+    const file = document.getElementById("imageInput").files[0];
+    if (!file) {
+        alert("Please select an image!");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    fetch("http://127.0.0.1:5000/predict", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("result").innerText =
+            "Prediction: " + data.prediction;
+    });
+
+    document.getElementById("preview").src =
+        URL.createObjectURL(file);
+}
+</script>
+
+</body>
+</html>
